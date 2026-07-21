@@ -8,7 +8,8 @@ import { taskService } from "../api/taskService";
 export default function Tasks() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [modalOpen, setModalOpen] = useState(false)
-    const [allHaveCategories, setAllHaveCategories] = useState(false)
+    const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined)
+    const [allHaveCategories, setAllHaveCategories] = useState(true)
 
     const handleCategoriesUpdate = (task_list: Record<string, unknown>[]) => {
         // Procura se pelo menos uma task está sem categoria
@@ -18,6 +19,20 @@ export default function Tasks() {
         setAllHaveCategories(!anyNoCategory);
     }
 
+    const handleEditTask = (task: Task) => {
+        setModalOpen(true);
+        setSelectedTask(task);
+    }
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+        setSelectedTask(undefined);
+    }
+
+    const handleNewTask = () => {
+        setModalOpen(true);
+        setSelectedTask(undefined);
+    }
 
     const handleFetchTasks = async () => {
         const response = await taskService.getAll();
@@ -46,16 +61,16 @@ export default function Tasks() {
 
     return (
         <div className="min-h-screen bg-slate-100">
-            <TaskFormModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onTaskCreated={handleFetchTasks}/>
+            <TaskFormModal initialTask={selectedTask} isOpen={modalOpen} onClose={handleCloseModal} onTaskCreated={handleFetchTasks}/>
             <div className="mx-auto max-w-5xl p-8">
 
-                <Header onNewTask={() => setModalOpen(true)} onCategorize={handleFetchTasks} categoriesOn={allHaveCategories} setCategoriesOn={setAllHaveCategories}/>
+                <Header onNewTask={handleNewTask} onCategorize={handleFetchTasks} categoriesOn={allHaveCategories} setCategoriesOn={setAllHaveCategories}/>
 
                 <div className="mt-8 space-y-4">
                     {
                         tasks.length > 0 ? 
                         tasks.map((task) => (
-                            <TaskCard key={task.id} task={task} onUpdate={handleFetchTasks}/>
+                            <TaskCard key={task.id} task={task} onUpdate={handleFetchTasks} editTask={handleEditTask} />
                         ))
                         : "Nenhuma Tarefa Adicionada" 
                     }

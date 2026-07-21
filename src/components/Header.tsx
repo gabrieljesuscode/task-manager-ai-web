@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { taskService } from "../api/taskService";
+import { Button } from "./Button";
 
 interface HeaderProps {
     onNewTask: () => void;
@@ -21,12 +22,12 @@ export default function Header({
 
     const handleCategorizeTasks = async () => {
         if (categoriesOn) return; // Se todas as tasks estão atualizadas bloqueia a ação
+        setCategoriesOn(true);
         
         setIsLoading(true)
         await taskService.categorize();
 
         onCategorize();// Atualiza todas as tasks da lista principal
-        setCategoriesOn(false);
 
         setIsLoading(false);
 
@@ -45,20 +46,16 @@ export default function Header({
         </div>
 
         <div className="flex gap-3">
-            <button
-            onClick={onNewTask}
-            className="rounded-lg bg-green-600 px-5 py-3 font-medium text-white transition hover:bg-green-700"
-            >
-            Nova Tarefa
-            </button>
-
-            <button
-            onClick={handleCategorizeTasks}
-            className={`rounded-lg  px-5 py-3 font-medium transition 
-                ${categoriesOn ? "bg-none border-2 border-indigo-700/40 text-indigo-700/40" : "text-white bg-indigo-700 hover:bg-indigo-800"}`}
-            >
-            {isLoading ? "Atualizando..." : "Categorizar com IA"}
-            </button>
+            <Button
+                className="bg-green-600 hover:bg-green-700 font-medium text-white" 
+                text="Nova Tarefa" 
+                onClick={onNewTask}
+            />
+            <Button
+                className={categoriesOn ? "bg-none border-2 border-indigo-700/40 text-indigo-700/40" : "text-white bg-indigo-700 hover:bg-indigo-800"}
+                text= {isLoading ? "Atualizando..." : "Categorizar com IA"}
+                onClick={handleCategorizeTasks}
+            />
         </div>
     </div>
     )

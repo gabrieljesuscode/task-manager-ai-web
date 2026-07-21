@@ -1,25 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { taskService } from "../api/taskService";
 import { Input } from "./Input";
 import { Button } from "./Button";
+import type { Task } from "../types/task";
 
 interface ModalProps {
+    initialTask: Task | undefined;
     isOpen: boolean;
     onClose: () => void;
     onTaskCreated: () => void;
 }
 
-export default function TaskFormModal({ isOpen, onClose, onTaskCreated }: ModalProps) {
+export default function TaskFormModal({ initialTask, isOpen, onClose, onTaskCreated }: ModalProps) {
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
+    
+    useEffect(() => {
+        const handleEditor = () => {
+            if (!initialTask) {
+                setTitle("")
+                setDescription("")
 
+                return;
+            };
+
+            setTitle(initialTask.title)
+            setDescription(initialTask.description)
+        }
+
+        handleEditor()
+    }, [initialTask])
+    
 
     if (!isOpen) return null;
 
     const handleCreateTask = async () => {
         if (!title) return window.alert("Título é obrigatório para a tarefa");
-
+        
         await taskService.create({
             title,
             description,
@@ -32,7 +50,23 @@ export default function TaskFormModal({ isOpen, onClose, onTaskCreated }: ModalP
         onClose();
     }
 
+    const handleUpdateTask = async () => {
+        if (!initialTask) return;
+        if (!title) return window.alert("Título é obrigatório para a tarefa");
 
+        await taskService.update(initialTask.id,{
+            title,
+            description,
+            completed: initialTask.completed
+        });
+
+
+        setTitle("");
+        setDescription("");
+
+        onTaskCreated(); // Atualiza Lista principal
+        onClose();
+    }
     
 
     return (
@@ -40,7 +74,7 @@ export default function TaskFormModal({ isOpen, onClose, onTaskCreated }: ModalP
             <div className="bg-white rounded-md w-2xl px-10 py-7" onClick={e => e.stopPropagation()}>
                 <div className=" ">
                     <h2 className="text-lg font-medium">
-                        Nova Tarefa
+                        {initialTask ? "Editar Tarefa" : "Nova Tarefa"}
                     </h2>
 
                     <div className="">
@@ -52,9 +86,19 @@ export default function TaskFormModal({ isOpen, onClose, onTaskCreated }: ModalP
                     </div>
 
                     <div className="flex justify-between mt-5">
-                        <Button className="bg-green-600 hover:bg-green-700 text-white" text="Adicionar Tarefa" onClick={handleCreateTask}/>
 
-                        <Button className="bg-red-600 hover:bg-red-700 text-white" text="Cancelar" onClick={onClose}/>
+                        <Button 
+                            className="bg-green-600 hover:bg-green-700 text-white" 
+                            text={initialTask ? "Salvar Alterações" : "Adicionar Tarefa"} 
+                            onClick={initialTask ? handleUpdateTask : handleCreateTask}
+                        />
+
+                        <Button 
+                            className="bg-red-600 hover:bg-red-700 text-white" 
+                            text="Cancelar" 
+                            onClick={onClose}
+                        />
+
                     </div>
 
                 </div>

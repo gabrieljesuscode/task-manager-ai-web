@@ -1,30 +1,56 @@
+import { Circle, CircleCheckBig } from "lucide-react";
 import { taskService } from "../api/taskService";
 import type { Task } from "../types/task"; 
+import { Button } from "./Button";
+
 
 
 interface Props {
     task: Task;
-    onUpdate: () => void
+    onUpdate: () => void;
+    editTask: (task: Task) => void;
 }
 
-export default function TaskCard({ task, onUpdate }: Props) {
+export default function TaskCard({ task, onUpdate, editTask }: Props) {
 
     const handleRemoveTask = async (id: number) => {
         await taskService.remove(id);
-
         onUpdate();
     }
 
+    const toggleCompleteTask = async () => {
+        
+        // Atualiza a tarefa no banco de dados com o inverso do task.completed
+        await taskService.update(task.id, {
+            title: task.title,
+            description: task.description,
+            completed: !task.completed
+        })
+        console.log(task.completed)
+
+        onUpdate(); // Atualiza lista da tela principal
+    }
+
     return (
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+        <div className={`rounded-xl border  p-6 shadow-sm transition hover:shadow-md ${task.completed ? "border-green-500 border-2 bg-green-50" : "border-slate-200 bg-white"}`}>
             <div className="flex items-start justify-between">
                 
-                
-                <div>
-                    <h2 className="text-xl font-semibold text-slate-800">
-                        {task.title}
-                    </h2>
+                <div onClick={toggleCompleteTask}>
+                    <div className="flex items-center gap-2">
 
+                        <button>
+                            {task.completed ?
+                                <CircleCheckBig className="text-green-500 text-lg" />
+                                : 
+                                <Circle className="text-slate-500 text-lg" />
+                            }
+                        </button>
+                        
+                        <h2 className="text-xl font-semibold text-slate-800">
+                            {task.title}
+                        </h2>
+                    </div>
+                    
                     <p className="mt-2 text-slate-600">
                         {task.description ?? "Nenhuma descrição adicionada"}
                     </p>
@@ -58,13 +84,18 @@ export default function TaskCard({ task, onUpdate }: Props) {
                 </div>
                 
                 <div className="space-x-2">
-                    <button className="rounded-lg bg-slate-200 px-4 py-2 font-medium transition hover:bg-slate-300">
-                        Editar
-                    </button>
+                    <Button
+                        className="bg-slate-200 hover:bg-slate-300 font-medium" 
+                        text="Editar" 
+                        onClick={() => editTask(task)}
+                    />
 
-                    <button onClick={() => handleRemoveTask(task.id)} className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white transition hover:bg-red-600">
-                        Remover
-                    </button>
+
+                    <Button
+                        className="bg-red-500 hover:bg-red-600 text-white font-medium" 
+                        text="Remover" 
+                        onClick={() => handleRemoveTask(task.id)}
+                    />
                 </div>
             </div>
         </div>

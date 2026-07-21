@@ -7,7 +7,7 @@ interface ButtonProps {
 export function Button ({ text, className, onClick }: ButtonProps) {
 
     return <button 
-            className={`rounded-lg px-5 py-3 text-sm font-medium transition ${className}`}
+            className={`rounded-lg px-4 py-2 font-medium transition cursor-pointer ${className}`}
             onClick={onClick}
         >
             { text }
