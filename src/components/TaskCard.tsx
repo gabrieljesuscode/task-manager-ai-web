@@ -1,11 +1,20 @@
+import { taskService } from "../api/taskService";
 import type { Task } from "../types/task"; 
 
 
 interface Props {
-    task: Task
+    task: Task;
+    onUpdate: () => void
 }
 
-export default function TaskCard({ task }: Props) {
+export default function TaskCard({ task, onUpdate }: Props) {
+
+    const handleRemoveTask = async (id: number) => {
+        await taskService.remove(id);
+
+        onUpdate();
+    }
+
     return (
         <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
             <div className="flex items-start justify-between">
@@ -53,7 +62,7 @@ export default function TaskCard({ task }: Props) {
                         Editar
                     </button>
 
-                    <button className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white transition hover:bg-red-600">
+                    <button onClick={() => handleRemoveTask(task.id)} className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white transition hover:bg-red-600">
                         Remover
                     </button>
                 </div>
