@@ -22,7 +22,7 @@ export default function TaskCard({ task, onUpdate, editTask, onDelete }: Props) 
             description: task.description,
             completed: !task.completed
         })
-        console.log(task.completed)
+        
 
         onUpdate(); // Atualiza lista da tela principal
     }

@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import TaskFormModal from "../components/TaskFormModal";
 import { taskService } from "../api/taskService";
 import { ConfirmModal } from "../components/ConfirmModal";
+import { Filter } from "../components/Filter";
 
 export default function Tasks() {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -42,6 +43,18 @@ export default function Tasks() {
         setSelectedTask(undefined);
     }
 
+    const handleGetCategories = () => {
+        const categories = tasks
+            .filter(task => task.category != null)
+            .map(task => task.category as string);
+
+        // O Set remove todas as duplicadas
+        const categoriesNoRepeat = Array.from(new Set(categories));
+        
+        return categoriesNoRepeat;
+        
+    }
+
     const handleFetchTasks = async () => {
         const response = await taskService.getAll();
 
@@ -66,12 +79,17 @@ export default function Tasks() {
 
     return (
         <div className="min-h-screen bg-slate-100">
+            
             <ConfirmModal isOpen={confirmModalOpen} onClose={() => setConfirmModalOpen(false)} taskId={idConfirm} updateList={handleFetchTasks}/>
+            
             <TaskFormModal initialTask={selectedTask} isOpen={formModalOpen} onClose={handleCloseModal} onTaskCreated={handleFetchTasks}/>
+            
             <div className="mx-auto max-w-5xl p-8">
 
                 <Header onNewTask={handleNewTask} onCategorize={handleFetchTasks} categoriesOn={allHaveCategories} setCategoriesOn={setAllHaveCategories}/>
-
+                
+                <Filter categories={handleGetCategories()}/>
+                
                 <div className="mt-8 space-y-4">
                     {
                         tasks.length > 0 ? 
