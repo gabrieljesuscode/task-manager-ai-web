@@ -1,4 +1,4 @@
-import { Circle, CircleCheckBig } from "lucide-react";
+import { Circle, CircleCheckBig, PencilIcon, Trash } from "lucide-react";
 import { taskService } from "../api/taskService";
 import type { Task } from "../types/task"; 
 import { Button } from "./Button";
@@ -9,14 +9,10 @@ interface Props {
     task: Task;
     onUpdate: () => void;
     editTask: (task: Task) => void;
+    onDelete: (id: number) => void;
 }
 
-export default function TaskCard({ task, onUpdate, editTask }: Props) {
-
-    const handleRemoveTask = async (id: number) => {
-        await taskService.remove(id);
-        onUpdate();
-    }
+export default function TaskCard({ task, onUpdate, editTask, onDelete }: Props) {
 
     const toggleCompleteTask = async () => {
         
@@ -86,15 +82,15 @@ export default function TaskCard({ task, onUpdate, editTask }: Props) {
                 <div className="space-x-2">
                     <Button
                         className="bg-slate-200 hover:bg-slate-300 font-medium" 
-                        text="Editar" 
+                        text={(<PencilIcon/>)}
                         onClick={() => editTask(task)}
                     />
 
 
                     <Button
-                        className="bg-red-500 hover:bg-red-600 text-white font-medium" 
-                        text="Remover" 
-                        onClick={() => handleRemoveTask(task.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white font-medium mt-1" 
+                        text={(<Trash/>)} 
+                        onClick={() => onDelete(task.id)}
                     />
                 </div>
             </div>

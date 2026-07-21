@@ -4,12 +4,15 @@ import TaskCard from "../components/TaskCard";
 import Header from "../components/Header";
 import TaskFormModal from "../components/TaskFormModal";
 import { taskService } from "../api/taskService";
+import { ConfirmModal } from "../components/ConfirmModal";
 
 export default function Tasks() {
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [modalOpen, setModalOpen] = useState(false)
-    const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined)
-    const [allHaveCategories, setAllHaveCategories] = useState(true)
+    const [formModalOpen, setFormModalOpen] = useState(false);
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+    const [idConfirm, setIdConfirm] = useState<number>(0);
+    const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
+    const [allHaveCategories, setAllHaveCategories] = useState(true);
 
     const handleCategoriesUpdate = (task_list: Record<string, unknown>[]) => {
         // Procura se pelo menos uma task está sem categoria
@@ -20,17 +23,22 @@ export default function Tasks() {
     }
 
     const handleEditTask = (task: Task) => {
-        setModalOpen(true);
+        setFormModalOpen(true);
         setSelectedTask(task);
     }
 
+    const handleConfirmModal = (id: number) => {
+        setConfirmModalOpen(true)
+        setIdConfirm(id)
+    }
+
     const handleCloseModal = () => {
-        setModalOpen(false);
+        setFormModalOpen(false);
         setSelectedTask(undefined);
     }
 
     const handleNewTask = () => {
-        setModalOpen(true);
+        setFormModalOpen(true);
         setSelectedTask(undefined);
     }
 
@@ -42,12 +50,9 @@ export default function Tasks() {
         setTasks(response.data);
     }
     
-    // ARRUMAR CATEGORIZE PARA IMPEDIR QUE CLIQUE DUAS VEZES COM AS MESMAS TAREFAS
-    // ARRUMAR CATEGORIZE NO HEADER COM CARREGAMENTO isLoading()
-    // ESTILIZAR MODAL
-    
     useEffect(() => {
         async function loadTasks() {
+            // Repete a handleFecth Tasks apenas para não acusar erro no linter
             const response = await taskService.getAll();
 
             handleCategoriesUpdate(response.data)
@@ -61,7 +66,8 @@ export default function Tasks() {
 
     return (
         <div className="min-h-screen bg-slate-100">
-            <TaskFormModal initialTask={selectedTask} isOpen={modalOpen} onClose={handleCloseModal} onTaskCreated={handleFetchTasks}/>
+            <ConfirmModal isOpen={confirmModalOpen} onClose={() => setConfirmModalOpen(false)} taskId={idConfirm} updateList={handleFetchTasks}/>
+            <TaskFormModal initialTask={selectedTask} isOpen={formModalOpen} onClose={handleCloseModal} onTaskCreated={handleFetchTasks}/>
             <div className="mx-auto max-w-5xl p-8">
 
                 <Header onNewTask={handleNewTask} onCategorize={handleFetchTasks} categoriesOn={allHaveCategories} setCategoriesOn={setAllHaveCategories}/>
@@ -70,7 +76,7 @@ export default function Tasks() {
                     {
                         tasks.length > 0 ? 
                         tasks.map((task) => (
-                            <TaskCard key={task.id} task={task} onUpdate={handleFetchTasks} editTask={handleEditTask} />
+                            <TaskCard key={task.id} task={task} onUpdate={handleFetchTasks} editTask={handleEditTask} onDelete={handleConfirmModal}/>
                         ))
                         : "Nenhuma Tarefa Adicionada" 
                     }
