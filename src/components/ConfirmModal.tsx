@@ -13,9 +13,10 @@ export function ConfirmModal({ taskId, isOpen, onClose, updateList, setIsLoading
     if (!isOpen) return null;
 
     const handleDeleteTask = async () => {
-        await taskService.remove(taskId, setIsLoading);
-
         onClose();
+
+        await taskService.remove(taskId, setIsLoading);
+        
         updateList();
     }
 
