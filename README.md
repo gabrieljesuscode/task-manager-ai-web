@@ -1,35 +1,44 @@
-# 🤖 Task Manager AI
+# Task Manager AI - Web
 
-Task Manager AI é uma aplicação web para gerenciamento de tarefas com categorização automática utilizando Inteligência Artificial.
+Front-end do Task Manager AI. O diferencial é a categorização automática das tarefas usando IA. Além disso, o CRUD clássico: criar, editar, remover e concluir as tarefas.
 
-## ✨ Funcionalidades
+## Preview
 
-- Criar tarefas
-- Editar tarefas
-- Remover tarefas
-- Marcar tarefas como concluídas
-- Categorizar tarefas com IA
-- Filtrar tarefas por categoria
-- Interface responsiva
+# Desktop:
+https://github.com/user-attachments/assets/38bf59c8-96c4-49d6-8ba4-95af2d803127
 
-## 🛠️ Tecnologias
+# Mobile:
+https://github.com/user-attachments/assets/b1a774d6-b627-4e0c-adee-e1802f222bc2
 
-- React
-- TypeScript
+
+## Stack
+- React + TypeScript
 - Tailwind CSS
 - Axios
+- Vite
 
-## 🚀 Como executar
+## Funcionalidades
+- CRUD completo
+- Categorização via IA
+- Filtro por categoria
+- Loading states e responsivo
 
-```bash
+## Rodando local
+
+# Clone
+git clone https://github.com/gabrieljesuscode/task-manager-ai-web.git
+cd task-manager-ai-web
+
+# Instale
 npm install
+
+# Configure a URL da API (exemplo local)
+echo "VITE_API_URL=http://localhost:8000" > .env
+
+# Rode
 npm run dev
-```
 
-A aplicação estará disponível em:
+API
+Repositório do back-end: task-manager-ai-api
 
-```
-http://localhost:5173
-```
-
-> Este projeto consome a API Task Manager AI desenvolvida em FastAPI.
+Gabriel da Silva de Jesus
