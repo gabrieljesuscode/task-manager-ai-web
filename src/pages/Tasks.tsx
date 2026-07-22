@@ -6,16 +6,32 @@ import TaskFormModal from "../components/TaskFormModal";
 import { taskService } from "../api/taskService";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { Filter } from "../components/Filter";
+import { Loading } from "../components/Loading";
 
 export default function Tasks() {
-    const [tasks, setTasks] = useState<Task[]>([]);
+    // Header
+    const [allHaveCategories, setAllHaveCategories] = useState(true);
+
+    // Loading
+    const [isLoading, setIsLoading] = useState(false);
+
+    // TaskFormModal
     const [formModalOpen, setFormModalOpen] = useState(false);
+    const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
+
+    // ConfirmModal
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
     const [idConfirm, setIdConfirm] = useState<number>(0);
-    const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
-    const [allHaveCategories, setAllHaveCategories] = useState(true);
-    const [categorySelect, setCategorySelect] = useState("")
 
+    // Filter
+    const [categorySelect, setCategorySelect] = useState("");
+
+    // TaskCard
+    const [tasks, setTasks] = useState<Task[]>([]);
+
+
+
+    // Header
     const handleCategoriesUpdate = (task_list: Record<string, unknown>[]) => {
         // Procura se pelo menos uma task está sem categoria
         const anyNoCategory = task_list.some(value => value.category == null);
@@ -24,6 +40,12 @@ export default function Tasks() {
         setAllHaveCategories(!anyNoCategory);
     }
 
+    const handleNewTask = () => {
+        setFormModalOpen(true);
+        setSelectedTask(undefined);
+    }
+
+    // TaskCard
     const handleEditTask = (task: Task) => {
         setFormModalOpen(true);
         setSelectedTask(task);
@@ -34,16 +56,28 @@ export default function Tasks() {
         setIdConfirm(id)
     }
 
+    const handleFetchTasks = async () => {
+        setIsLoading(true)
+        
+        const response = await taskService.getAll(setIsLoading);
+
+        handleCategoriesUpdate(response.data)
+        
+        setTasks(response.data);
+    }
+
+    // ConfirmModal
+    const handleDeleteUpdate = () => {
+        handleFetchTasks()
+    }
+
+    // TaskFormModal
     const handleCloseModal = () => {
         setFormModalOpen(false);
         setSelectedTask(undefined);
     }
 
-    const handleNewTask = () => {
-        setFormModalOpen(true);
-        setSelectedTask(undefined);
-    }
-
+    // Filter
     const handleGetCategories = () => {
         const categories = tasks
             .filter(task => task.category != null)
@@ -53,17 +87,8 @@ export default function Tasks() {
         const categoriesNoRepeat = Array.from(new Set(categories));
         
         return categoriesNoRepeat;
-        
     }
 
-    const handleFetchTasks = async () => {
-        const response = await taskService.getAll();
-
-        handleCategoriesUpdate(response.data)
-        
-        setTasks(response.data);
-    }
-    
     const handleFilterTasks = (category: string) => {
         if (categorySelect === category) {
             setCategorySelect("");
@@ -75,7 +100,7 @@ export default function Tasks() {
     useEffect(() => {
         async function loadTasks() {
             // Repete a handleFecth Tasks apenas para não acusar erro no linter
-            const response = await taskService.getAll();
+            const response = await taskService.getAll(setIsLoading);
 
             handleCategoriesUpdate(response.data)
             
@@ -88,10 +113,24 @@ export default function Tasks() {
 
     return (
         <div className="min-h-screen bg-slate-100">
+
+            <Loading isLoading={isLoading} />
             
-            <ConfirmModal isOpen={confirmModalOpen} onClose={() => setConfirmModalOpen(false)} taskId={idConfirm} updateList={handleFetchTasks}/>
+            <ConfirmModal 
+                isOpen={confirmModalOpen} 
+                onClose={() => setConfirmModalOpen(false)} 
+                taskId={idConfirm} 
+                updateList={handleDeleteUpdate}
+                setIsLoading={setIsLoading}
+            />
             
-            <TaskFormModal initialTask={selectedTask} isOpen={formModalOpen} onClose={handleCloseModal} onTaskCreated={handleFetchTasks}/>
+            <TaskFormModal 
+                initialTask={selectedTask} 
+                isOpen={formModalOpen} 
+                onClose={handleCloseModal} 
+                onTaskCreated={handleFetchTasks}
+                setIsLoading={setIsLoading}
+            />
             
             <div className="mx-auto max-w-5xl p-8">
 
@@ -109,7 +148,14 @@ export default function Tasks() {
                         tasks
                         .filter(task => categorySelect === "" || task.category === categorySelect)
                         .map((task) => (
-                            <TaskCard key={task.id} task={task} onUpdate={handleFetchTasks} editTask={handleEditTask} onDelete={handleConfirmModal}/>
+                            <TaskCard 
+                                key={task.id} 
+                                task={task} 
+                                onUpdate={handleFetchTasks} 
+                                editTask={handleEditTask} 
+                                onDelete={handleConfirmModal}
+                                setIsLoading={setIsLoading}
+                            />
                         ))
                         : 
                         <p className="bg-slate-200 px-3 py-2 rounded-lg text-center text-slate-600">

@@ -10,9 +10,10 @@ interface Props {
     onUpdate: () => void;
     editTask: (task: Task) => void;
     onDelete: (id: number) => void;
+    setIsLoading: (bool: boolean) => void;
 }
 
-export default function TaskCard({ task, onUpdate, editTask, onDelete }: Props) {
+export default function TaskCard({ task, onUpdate, editTask, onDelete, setIsLoading }: Props) {
 
     const toggleCompleteTask = async () => {
         
@@ -21,7 +22,7 @@ export default function TaskCard({ task, onUpdate, editTask, onDelete }: Props) 
             title: task.title,
             description: task.description,
             completed: !task.completed
-        })
+        }, setIsLoading)
 
         onUpdate(); // Atualiza lista da tela principal
     }

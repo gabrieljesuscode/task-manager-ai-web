@@ -5,14 +5,15 @@ interface ConfirmProps {
     taskId: number;
     isOpen: boolean;
     onClose: () => void;
-    updateList: () => void
+    updateList: () => void;
+    setIsLoading: (bool: boolean) => void;
 }
 
-export function ConfirmModal({ taskId, isOpen, onClose, updateList }: ConfirmProps) {
+export function ConfirmModal({ taskId, isOpen, onClose, updateList, setIsLoading }: ConfirmProps) {
     if (!isOpen) return null;
 
     const handleDeleteTask = async () => {
-        await taskService.remove(taskId);
+        await taskService.remove(taskId, setIsLoading);
 
         onClose();
         updateList();

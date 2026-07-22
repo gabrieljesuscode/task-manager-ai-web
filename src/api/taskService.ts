@@ -1,27 +1,59 @@
-import { api } from "./api"
+import api from "./api"
 import type { TaskUpdate, TaskCreate } from "../types/task"
 
 
 export const taskService = {
 
-    getAll() {
-        return api.get("/tasks")
+    async getAll(setIsLoading: (bool: boolean) => void) {
+
+        setIsLoading(true)
+
+        try {
+            return await api.get("/tasks")
+        } finally {
+            setIsLoading(false)
+        }
+
     },
 
-    create(task: TaskCreate) {
-        return api.post(`/tasks`, task)
+    async create(task: TaskCreate, setIsLoading: (bool: boolean) => void) {
+        setIsLoading(true)
+
+        try {
+            return await api.post(`/tasks`, task)
+        } finally {
+            setIsLoading(false)
+        }
     },
 
-    update(id: number, task: TaskUpdate) {
-        return api.put(`/tasks/${id}`, task)
+    async update(id: number, task: TaskUpdate, setIsLoading: (bool: boolean) => void) {
+        setIsLoading(true)
+
+        try {
+            return await api.put(`/tasks/${id}`, task)
+        } finally {
+            setIsLoading(false)
+        }
     },
 
-    remove(id: number) {
-        return api.delete(`/tasks/${id}`)
+    async remove(id: number, setIsLoading: (bool: boolean) => void) {
+        setIsLoading(true)
+
+        try {
+            return await api.delete(`/tasks/${id}`)
+        } finally {
+            setIsLoading(false)
+        }
     },
 
-    categorize() {
-        return api.get("/ai/categorize")
+    async categorize(setIsLoading: (bool: boolean) => void) {
+        setIsLoading(true)
+
+        try {
+            return await api.get("/ai/categorize")
+        } finally {
+            setIsLoading(false)
+        }
     }
 }
 

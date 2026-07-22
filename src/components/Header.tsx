@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { taskService } from "../api/taskService";
 import { Button } from "./Button";
+import { Sparkles } from "lucide-react";
 
 interface HeaderProps {
     onNewTask: () => void;
@@ -25,7 +26,7 @@ export default function Header({
         setCategoriesOn(true);
         
         setIsLoading(true)
-        await taskService.categorize();
+        await taskService.categorize(setIsLoading);
 
         onCategorize();// Atualiza todas as tasks da lista principal
 
@@ -37,7 +38,7 @@ export default function Header({
     <div className="mb-5 flex flex-col items-center gap-4 md:flex-row md:flex-wrap md:items-center md:justify-between">
         <div className="flex flex-col items-center md:items-start">
             <h1 className="text-4xl font-bold text-slate-800 text-center md:text-start">
-            Lista de Tarefas com IA
+            Gerenciador de Tarefas
             </h1>
 
             <p className="mt-2 text-slate-500 text-center md:text-start">
@@ -53,7 +54,19 @@ export default function Header({
             />
             <Button
                 className={categoriesOn ? "bg-none border-2 border-indigo-700/40 text-indigo-700/40" : "text-white bg-indigo-700 hover:bg-indigo-800"}
-                text= {isLoading ? "Atualizando..." : "Categorizar com IA"}
+                text= {
+                    isLoading ? 
+                    "Atualizando..." 
+                    : 
+                    (
+                        <div className="flex justify-center gap-2">
+                            <Sparkles/>
+                            <span>
+                                Gerar Categorias
+                            </span>    
+                        </div>
+                    )
+                }
                 onClick={handleCategorizeTasks}
             />
         </div>

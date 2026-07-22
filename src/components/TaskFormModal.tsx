@@ -9,9 +9,10 @@ interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     onTaskCreated: () => void;
+    setIsLoading: (bool: boolean) => void;
 }
 
-export default function TaskFormModal({ initialTask, isOpen, onClose, onTaskCreated }: ModalProps) {
+export default function TaskFormModal({ initialTask, isOpen, onClose, onTaskCreated, setIsLoading }: ModalProps) {
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -41,7 +42,9 @@ export default function TaskFormModal({ initialTask, isOpen, onClose, onTaskCrea
         await taskService.create({
             title,
             description,
-        });
+        }, 
+            setIsLoading
+        );
 
         setTitle("");
         setDescription("");
@@ -58,7 +61,9 @@ export default function TaskFormModal({ initialTask, isOpen, onClose, onTaskCrea
             title,
             description,
             completed: initialTask.completed
-        });
+        },
+            setIsLoading
+        );
 
 
         setTitle("");
