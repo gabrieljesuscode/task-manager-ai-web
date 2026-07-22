@@ -84,7 +84,7 @@ export default function TaskCard({ task, onUpdate, editTask, onDelete, setIsLoad
 
 
                     <Button
-                        className="border-red-500 bg-none border hover:bg-red-600 text-red-500 font-medium mt-1" 
+                        className="border-red-500 bg-none border hover:text-white hover:bg-red-600 text-red-500 font-medium mt-1" 
                         text={(<Trash size={20}/>)} 
                         onClick={() => onDelete(task.id)}
                     />
