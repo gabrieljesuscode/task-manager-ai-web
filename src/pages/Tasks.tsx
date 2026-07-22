@@ -103,7 +103,7 @@ export default function Tasks() {
                     selectedCategory={categorySelect}
                 />
                 
-                <div className="mt-8 space-y-4">
+                <div className="mt-5 space-y-4">
                     {
                         tasks.length > 0 ? 
                         tasks

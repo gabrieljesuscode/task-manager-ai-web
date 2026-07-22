@@ -8,11 +8,11 @@ interface FilterProps {
 
 export function Filter({ categories, selectCategory, selectedCategory }: FilterProps) {
     return (
-        <div className="flex items-center gap-2">
-            <span>
+        <div className="flex items-center gap-2 flex-col md:flex-row">
+            <span className="text-slate-500">
                 Categorias:
             </span>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap justify-center items-center">
                 {
                 categories.length > 0 ? 
                     categories.map(value => (

@@ -22,16 +22,15 @@ export default function TaskCard({ task, onUpdate, editTask, onDelete }: Props) 
             description: task.description,
             completed: !task.completed
         })
-        
 
         onUpdate(); // Atualiza lista da tela principal
     }
 
     return (
         <div className={`rounded-xl border  p-6 shadow-sm transition hover:shadow-md ${task.completed ? "border-green-500 border-2 bg-green-50" : "border-slate-200 bg-white"}`}>
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 
-                <div onClick={toggleCompleteTask}>
+                <div onClick={toggleCompleteTask} className="flex flex-col items-center text-center md:text-start md:items-start">
                     <div className="flex items-center gap-2">
 
                         <button>
@@ -54,7 +53,7 @@ export default function TaskCard({ task, onUpdate, editTask, onDelete }: Props) 
             
             
                 <span
-                    className={`rounded-full px-3 py-1 text-sm font-medium ${
+                    className={`rounded-full px-3 py-1 text-sm font-medium text-center ${
                     task.completed
                         ? "bg-green-100 text-green-700"
                         : "bg-yellow-100 text-yellow-700"
@@ -67,13 +66,9 @@ export default function TaskCard({ task, onUpdate, editTask, onDelete }: Props) 
 
         
 
-            <div className="mt-5 flex items-start justify-between">
-                <div className="flex items-center gap-2">
-                    <span className="text-sm text-slate-500">
-                        Categoria:
-                    </span>
-
-                    <span className="rounded-md bg-slate-100 px-3 py-1 text-sm text-slate-700">
+            <div className="mt-5 flex items-center md:items-start justify-between">
+                <div className="flex md:items-center gap-2 flex-col md:flex-row">
+                    <span className="rounded-md bg-blue-100 px-4 py-1 text-sm text-slate-700">
                         {task.category ?? "Sem Categoria"}
                     </span>
                     
@@ -81,15 +76,15 @@ export default function TaskCard({ task, onUpdate, editTask, onDelete }: Props) 
                 
                 <div className="space-x-2">
                     <Button
-                        className="bg-slate-200 hover:bg-slate-300 font-medium" 
-                        text={(<PencilIcon/>)}
+                        className="bg-slate-200 hover:bg-slate-300 border border-slate-200 font-medium" 
+                        text={(<PencilIcon size={20}/>)}
                         onClick={() => editTask(task)}
                     />
 
 
                     <Button
-                        className="bg-red-500 hover:bg-red-600 text-white font-medium mt-1" 
-                        text={(<Trash/>)} 
+                        className="border-red-500 bg-none border hover:bg-red-600 text-red-500 font-medium mt-1" 
+                        text={(<Trash size={20}/>)} 
                         onClick={() => onDelete(task.id)}
                     />
                 </div>

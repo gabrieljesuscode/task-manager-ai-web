@@ -34,21 +34,21 @@ export default function Header({
     }
 
     return (
-    <div className="mb-10 flex items-center justify-between">
-        <div>
-            <h1 className="text-4xl font-bold text-slate-800">
+    <div className="mb-5 flex flex-col items-center gap-4 md:flex-row md:flex-wrap md:items-center md:justify-between">
+        <div className="flex flex-col items-center md:items-start">
+            <h1 className="text-4xl font-bold text-slate-800 text-center md:text-start">
             Lista de Tarefas com IA
             </h1>
 
-            <p className="mt-2 text-slate-500">
+            <p className="mt-2 text-slate-500 text-center md:text-start">
                 Organize suas tarefas com IA
             </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-col md:flex-row w-full">
             <Button
                 className="bg-green-600 hover:bg-green-700 font-medium text-white" 
-                text="Nova Tarefa" 
+                text="+ Nova Tarefa" 
                 onClick={onNewTask}
             />
             <Button
