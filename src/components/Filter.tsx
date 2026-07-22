@@ -7,6 +7,9 @@ interface FilterProps {
 }
 
 export function Filter({ categories, selectCategory, selectedCategory }: FilterProps) {
+    
+    if (categories.length === 0) return null;
+
     return (
         <div className="flex items-center gap-2 flex-col md:flex-row">
             <span className="text-slate-500">

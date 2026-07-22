@@ -111,7 +111,10 @@ export default function Tasks() {
                         .map((task) => (
                             <TaskCard key={task.id} task={task} onUpdate={handleFetchTasks} editTask={handleEditTask} onDelete={handleConfirmModal}/>
                         ))
-                        : "Nenhuma Tarefa Adicionada" 
+                        : 
+                        <p className="bg-slate-200 px-3 py-2 rounded-lg text-center text-slate-600">
+                            Nenhuma Tarefa Adicionada 
+                        </p>
                     }
                 </div>
 
