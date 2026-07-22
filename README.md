@@ -4,11 +4,12 @@ Front-end do Task Manager AI. O diferencial é a categorização automática das
 
 ## Preview
 
-# Desktop:
+### Desktop:
 https://github.com/user-attachments/assets/38bf59c8-96c4-49d6-8ba4-95af2d803127
 
-# Mobile:
-https://github.com/user-attachments/assets/b1a774d6-b627-4e0c-adee-e1802f222bc2
+### Mobile:
+<img width="238" alt="print mobile task ai" src="https://github.com/user-attachments/assets/20c417a3-6a77-42b9-9911-88c0d4105bb6" />
+
 
 
 ## Stack
@@ -25,20 +26,20 @@ https://github.com/user-attachments/assets/b1a774d6-b627-4e0c-adee-e1802f222bc2
 
 ## Rodando local
 
-# Clone
+### Clone
 git clone https://github.com/gabrieljesuscode/task-manager-ai-web.git
 cd task-manager-ai-web
 
-# Instale
+### Instale
 npm install
 
-# Configure a URL da API (exemplo local)
+### Configure a URL da API (exemplo local)
 echo "VITE_API_URL=http://localhost:8000" > .env
 
-# Rode
+### Rode
 npm run dev
 
-API
+### API
 Repositório do back-end: task-manager-ai-api
 
-Gabriel da Silva de Jesus
+#### Gabriel da Silva de Jesus
