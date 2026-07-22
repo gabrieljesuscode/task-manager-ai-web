@@ -14,6 +14,7 @@ export default function Tasks() {
     const [idConfirm, setIdConfirm] = useState<number>(0);
     const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
     const [allHaveCategories, setAllHaveCategories] = useState(true);
+    const [categorySelect, setCategorySelect] = useState("")
 
     const handleCategoriesUpdate = (task_list: Record<string, unknown>[]) => {
         // Procura se pelo menos uma task está sem categoria
@@ -63,6 +64,14 @@ export default function Tasks() {
         setTasks(response.data);
     }
     
+    const handleFilterTasks = (category: string) => {
+        if (categorySelect === category) {
+            setCategorySelect("");
+        } else {
+            setCategorySelect(category);
+        }
+    }
+
     useEffect(() => {
         async function loadTasks() {
             // Repete a handleFecth Tasks apenas para não acusar erro no linter
@@ -88,12 +97,18 @@ export default function Tasks() {
 
                 <Header onNewTask={handleNewTask} onCategorize={handleFetchTasks} categoriesOn={allHaveCategories} setCategoriesOn={setAllHaveCategories}/>
                 
-                <Filter categories={handleGetCategories()}/>
+                <Filter 
+                    categories={handleGetCategories()} 
+                    selectCategory={handleFilterTasks}
+                    selectedCategory={categorySelect}
+                />
                 
                 <div className="mt-8 space-y-4">
                     {
                         tasks.length > 0 ? 
-                        tasks.map((task) => (
+                        tasks
+                        .filter(task => categorySelect === "" || task.category === categorySelect)
+                        .map((task) => (
                             <TaskCard key={task.id} task={task} onUpdate={handleFetchTasks} editTask={handleEditTask} onDelete={handleConfirmModal}/>
                         ))
                         : "Nenhuma Tarefa Adicionada" 

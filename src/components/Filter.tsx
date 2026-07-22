@@ -1,10 +1,12 @@
-import type { ReactNode } from "react";
+import { Button } from "./Button";
 
 interface FilterProps {
-    categories: ReactNode[];
+    categories: string[];
+    selectCategory: (category: string) => void
+    selectedCategory: string
 }
 
-export function Filter({ categories }: FilterProps) {
+export function Filter({ categories, selectCategory, selectedCategory }: FilterProps) {
     return (
         <div className="flex items-center gap-2">
             <span>
@@ -14,9 +16,16 @@ export function Filter({ categories }: FilterProps) {
                 {
                 categories.length > 0 ? 
                     categories.map(value => (
-                        <button className="rounded-lg px-3 py-2 bg-slate-200">
-                            { value }
-                        </button>
+                        <Button
+                            key={value}
+                            text={value}
+                            className={`active:scale-80
+                                ${
+                                    selectedCategory === value ? "bg-blue-600 text-white" : "bg-slate-200"
+                                }`}
+                            onClick={() => selectCategory(value)} 
+                            
+                        />
                     ))
                     :
                     "Nenhuma categoria gerada"
