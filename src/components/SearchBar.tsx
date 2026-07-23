@@ -1,5 +1,5 @@
 import { Search, X } from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface SearchBarProps {
     setTitleSearch: (title: string) => void
@@ -7,16 +7,28 @@ interface SearchBarProps {
 
 
 export function SearchBar( { setTitleSearch }: SearchBarProps ) {
-    const [ title, setTitle ] = useState("")
+    const [ title, setTitle ] = useState("");
+    const inputRef = useRef<HTMLInputElement>(null) // 2. Crie a referência para o input
 
+    const scrollToTasks = () => {
+        const tasksElement = document.getElementById('tasks-section');
+        if (tasksElement) {
+            tasksElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
 
     const handleSetTitleSearch = () => {
+        const query = title.trim();
 
-        setTitleSearch(title.trim())
+        setTitleSearch(query);
+
+        inputRef.current?.blur()
+
+        if (query !== "") scrollToTasks();
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') handleSetTitleSearch()
+        if (event.key === 'Enter') handleSetTitleSearch();
     }
 
 
@@ -49,6 +61,7 @@ export function SearchBar( { setTitleSearch }: SearchBarProps ) {
                 value={title}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
+                ref={inputRef}
             />
 
             {title.trim() !== "" && (
