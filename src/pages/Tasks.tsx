@@ -11,6 +11,7 @@ import { Loading } from "../components/Loading";
 export default function Tasks() {
     // Header
     const [allHaveCategories, setAllHaveCategories] = useState(true);
+    const [titleToSearch, setTitleToSearch] = useState("");
 
     // Loading
     const [isLoading, setIsLoading] = useState(false);
@@ -52,8 +53,8 @@ export default function Tasks() {
     }
 
     const handleConfirmModal = (id: number) => {
-        setConfirmModalOpen(true)
-        setIdConfirm(id)
+        setConfirmModalOpen(true);
+        setIdConfirm(id);
     }
 
     const handleFetchTasks = async () => {
@@ -81,12 +82,15 @@ export default function Tasks() {
     const handleGetCategories = () => {
         const categories = tasks
             .filter(task => task.category != null)
+            .filter(task => titleToSearch === "" || task.title.toLowerCase().includes(titleToSearch.toLowerCase()))
             .map(task => task.category as string);
 
         // O Set remove todas as duplicadas
         const categoriesNoRepeat = Array.from(new Set(categories));
         
-        return categoriesNoRepeat;
+        const finalCategories = ["Todas", ...categoriesNoRepeat]
+
+        return finalCategories;
     }
 
     const handleFilterTasks = (category: string) => {
@@ -134,7 +138,13 @@ export default function Tasks() {
             
             <div className="mx-auto max-w-5xl p-8">
 
-                <Header onNewTask={handleNewTask} onCategorize={handleFetchTasks} categoriesOn={allHaveCategories} setCategoriesOn={setAllHaveCategories}/>
+                <Header 
+                    onNewTask={handleNewTask} 
+                    onCategorize={handleFetchTasks} 
+                    categoriesOn={allHaveCategories} 
+                    setCategoriesOn={setAllHaveCategories}
+                    setTitleSearch={setTitleToSearch}
+                />
                 
                 <Filter 
                     categories={handleGetCategories()} 
@@ -147,6 +157,7 @@ export default function Tasks() {
                         tasks.length > 0 ? 
                         tasks
                         .filter(task => categorySelect === "" || task.category === categorySelect)
+                        .filter(task => titleToSearch === "" || task.title.toLowerCase().includes(titleToSearch.toLowerCase()))
                         .map((task) => (
                             <TaskCard 
                                 key={task.id} 

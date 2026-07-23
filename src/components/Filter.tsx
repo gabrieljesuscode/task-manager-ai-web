@@ -24,10 +24,10 @@ export function Filter({ categories, selectCategory, selectedCategory }: FilterP
                             text={value}
                             className={`active:scale-80
                                 ${
-                                    selectedCategory === value ? "bg-blue-600 text-white" : "bg-slate-200"
+                                    selectedCategory === value || (value === "Todas" && selectedCategory === "") ? "bg-blue-600 text-white" : "bg-slate-200"
                                 }`}
-                            onClick={() => selectCategory(value)} 
                             
+                            onClick={value === "Todas" ? () => selectCategory("") : () => selectCategory(value)}
                         />
                     ))
                     :

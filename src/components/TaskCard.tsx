@@ -42,7 +42,7 @@ export default function TaskCard({ task, onUpdate, editTask, onDelete, setIsLoad
                             }
                         </button>
                         
-                        <h2 className="text-xl font-semibold text-slate-800">
+                        <h2 className={`text-xl font-semibold text-slate-800 ${task.completed ? "line-through" : ""}`}>
                             {task.title}
                         </h2>
                     </div>
