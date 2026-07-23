@@ -42,5 +42,6 @@ npm run dev
 
 ### API
 Repositório do back-end: task-manager-ai-api
+[https://github.com/gabrieljesuscode/task-manager-ai-api](url)
 
 #### Gabriel da Silva de Jesus
